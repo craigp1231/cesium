@@ -91,6 +91,10 @@ BillboardVisualizer.prototype.update = function (time) {
     var item = items[i];
     var entity = item.entity;
     var billboardGraphics = entity._billboard;
+    if (entity.manualUpdate && !billboardGraphics.forceUpdate) {
+      continue;
+    }
+    billboardGraphics.forceUpdate = false;
     var textureValue;
     var billboard = item.billboard;
     var show =

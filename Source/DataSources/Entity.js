@@ -92,6 +92,8 @@ function createPropertyTypeDescriptor(name, Type) {
  * @property {PolylineVolumeGraphics | PolylineVolumeGraphics.ConstructorOptions} [polylineVolume] A polylineVolume to associate with this entity.
  * @property {RectangleGraphics | RectangleGraphics.ConstructorOptions} [rectangle] A rectangle to associate with this entity.
  * @property {WallGraphics | WallGraphics.ConstructorOptions} [wall] A wall to associate with this entity.
+ * @property {Boolean} [manualUpdate] A flag to notify if we should update the entity's graphics manually (with forceUpdate)
+ * @property {Boolean} [forceUpdate] A flag to notify if we should update the entity's graphics only in the next rendering cycle (if manualUpdate is true).
  */
 
 /**
@@ -189,6 +191,8 @@ function Entity(options) {
   this._wall = undefined;
   this._wallSubscription = undefined;
   this._children = [];
+  this._manualUpdate = false;
+  this._forceUpdate = false;
 
   /**
    * Gets or sets the entity collection that this entity belongs to.
@@ -220,6 +224,41 @@ function updateShow(entity, children, isShowing) {
 }
 
 Object.defineProperties(Entity.prototype, {
+  /**
+   * Notifies the Entity's Graphics if they should update in the next rendering cycle.
+   * @memberof Entity.prototype
+   * @type {Number}
+   */
+   manualUpdate: {
+    get: function() {
+        return this._manualUpdate;
+    },
+    set: function(value) {
+        this._manualUpdate = Boolean(value);
+    }
+  },
+   /**
+    * Notifies the Entity's Graphics if they should update in the next rendering cycle.
+    * @memberof Entity.prototype
+    * @type {Number}
+    */
+  forceUpdate : {
+      get : function() {
+          return this._forceUpdate;
+      },
+      set : function(value) {
+          // do it only if value changed
+          if (value !== this._forceUpdate) {
+              // TODO::should we optimize other graphics? Maybe according to propertyNames?
+              if (this.billboard) {
+                  this.billboard.forceUpdate = 1;
+              }
+              if (this.label) {
+                  this.label.forceUpdate = 1;
+              }
+          }
+      }
+  },
   /**
    * The availability, if any, associated with this object.
    * If availability is undefined, it is assumed that this object's

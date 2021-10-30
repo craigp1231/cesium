@@ -100,6 +100,10 @@ LabelVisualizer.prototype.update = function (time) {
     var item = items[i];
     var entity = item.entity;
     var labelGraphics = entity._label;
+    if (entity.manualUpdate && !labelGraphics.forceUpdate) {
+      continue;
+    }
+    labelGraphics.forceUpdate = false;
     var text;
     var label = item.label;
     var show =

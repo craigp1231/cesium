@@ -89,11 +89,27 @@ function BillboardGraphics(options) {
   this._distanceDisplayConditionSubscription = undefined;
   this._disableDepthTestDistance = undefined;
   this._disableDepthTestDistanceSubscription = undefined;
+  this._forceUpdate = false;
 
   this.merge(defaultValue(options, defaultValue.EMPTY_OBJECT));
 }
 
 Object.defineProperties(BillboardGraphics.prototype, {
+  /**
+   * Tell the renderer to force the Billboard to update
+   * @memberof BillboardGraphics.prototype
+   * @type {boolean}
+   * @default false
+   */
+  forceUpdate: {
+      get: function() {
+          return this._forceUpdate;
+      },
+      set: function(value) {
+          this._forceUpdate = Boolean(value);
+      }
+  },
+
   /**
    * Gets the event that is raised whenever a property or sub-property is changed or modified.
    * @memberof BillboardGraphics.prototype
